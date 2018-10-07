@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="content_area" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="parent" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="codejavafxform.RegistrationFXMLController">
+    <children>
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" styleClass="sidebar">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" smooth="false">
+               <image>
+                  <Image url="@../icons/Logo-With-Purple-Background.jpg" />
+               </image>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin></ImageView>
+            <Label text="WELCOME TO" textFill="WHITE">
+               <font>
+                  <Font name="Ebrima Bold" size="18.0" />
+               </font>
+            </Label>
+         </children></VBox>
+      <AnchorPane fx:id="content_area" layoutX="301.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #FFF;">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="21.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/Logo-With-White-Background.jpg" />
+               </image>
+            </ImageView>
+            <Label layoutX="15.0" layoutY="61.0" text="WELCOME BACK" textFill="#545454">
+               <font>
+                  <Font name="Impact" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="15.0" layoutY="84.0" text="Sign in to continue" textFill="#a3a3a3">
+               <font>
+                  <Font name="Impact" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="username" contentDisplay="CENTER" layoutX="14.0" layoutY="115.0" prefHeight="27.0" prefWidth="70.0" text="Username">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label fx:id="password" contentDisplay="CENTER" layoutX="14.0" layoutY="161.0" prefHeight="27.0" prefWidth="70.0" text="Password">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label fx:id="email" contentDisplay="CENTER" layoutX="14.0" layoutY="207.0" prefHeight="27.0" prefWidth="70.0" text="Email">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Button fx:id="btnSubmit" layoutX="89.0" layoutY="251.0" mnemonicParsing="false" onMouseClicked="#open_registration" prefHeight="26.0" prefWidth="56.0" styleClass="loginBtn" text="Submit">
+               <font>
+                  <Font size="10.0" />
+               </font></Button>
+            <Button fx:id="btnReset" layoutX="185.0" layoutY="251.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" text="Reset">
+               <font>
+                  <Font size="10.0" />
+               </font></Button>
+            <Label layoutX="81.0" layoutY="287.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Already have an account?">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <Label layoutX="208.0" layoutY="287.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-text-fill: #6747CD;" text="Sign in">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <PasswordField fx:id="passwordField" layoutX="404.0" layoutY="155.0" prefHeight="39.0" prefWidth="169.0" />
+      <TextField fx:id="usernameField" layoutX="404.0" layoutY="109.0" prefHeight="39.0" prefWidth="169.0" />
+      <TextField fx:id="emailField" layoutX="404.0" layoutY="201.0" prefHeight="39.0" prefWidth="169.0" />
+    </children>
+</AnchorPane>

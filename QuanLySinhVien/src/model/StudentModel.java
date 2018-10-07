@@ -9,6 +9,7 @@ import controller.StudentController;
 import entity.Student;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,23 +23,49 @@ public class StudentModel {
     // Làm việc với database
 
     // Thêm thông tin
-    public boolean insert(Student student) {
+    public boolean insert(Student student) throws SQLException {
         try {
             // Tạo kết nối tới database MySQL với biến connnection thuộc lớp Connection
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/quanlysinhvien?useUnicode=true&characterEncoding=utf-8", "root", "");
+            
+            // Cách đẩy tham số vào câu lệnh
+            String sql = "insert into students (name, address, phone, rollNumber) values (?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, student.getName());
+            ps.setString(2, student.getAddress());
+            ps.setString(3, student.getPhone());
+            ps.setString(4, student.getRollNumber());
+            
+            ps.execute();
+            
             // Tạo câu truy vấn của biến connection
-            Statement stt = connection.createStatement();
-            stt.execute("insert into students (name, address, phone, rollNumber) values ('"
-                    + student.getName() + "'," + "'"
-                    + student.getAddress() + "','"
-                    + student.getPhone() + "', '"
-                    + student.getRollNumber() + "')");
+//            Statement stt = connection.createStatement();
+//            stt.execute("insert into students (name, address, phone, rollNumber) values ('"
+//                    + student.getName() + "'," + "'"
+//                    + student.getAddress() + "','"
+//                    + student.getPhone() + "', '"
+//                    + student.getRollNumber() + "')");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println("Không thêm được sinh viên mới vào. Vui lòng thử lại.");
             return false;
         }
-        return true;
+        return false;
+
+//        if(student.getName().equals("xuanhung")){
+//            throw new SQLException("Lỗi");
+//        }
+//        Connection connection = DriverManager.getConnection(
+//                "jdbc:mysql://localhost:3306/quanlysinhvien?useUnicode=true&characterEncoding=utf-8", "root", "");
+//        // Tạo câu truy vấn của biến connection
+//        Statement stt = connection.createStatement();
+//        stt.execute("insert into students (name, address, phone, rollNumber) values ('"
+//                + student.getName() + "'," + "'"
+//                + student.getAddress() + "','"
+//                + student.getPhone() + "', '"
+//                + student.getRollNumber() + "')");
+//        return true;
+        
     }
 
     // Lấy danh sách sinh viên từ trong database
@@ -47,8 +74,11 @@ public class StudentModel {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/quanlysinhvien?useUnicode=true&characterEncoding=utf-8", "root", "");
-            Statement stt = connection.createStatement();
-            ResultSet rs = stt.executeQuery("SELECT * FROM students");
+            String sql = "SELECT * FROM students";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+//            Statement stt = connection.createStatement();
+//            ResultSet rs = stt.executeQuery("SELECT * FROM students");
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String rollNumber = rs.getString("rollNumber");
@@ -59,7 +89,7 @@ public class StudentModel {
                 listStudent.add(studentGetList);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được danh sách sinh viên. Vui lòng thử lại.");
         }
         return listStudent;
     }
@@ -73,8 +103,16 @@ public class StudentModel {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/quanlysinhvien?useUnicode=true&characterEncoding=utf-8", "root", "");
-            Statement stt = connection.createStatement();
-            ResultSet rs = stt.executeQuery("SELECT * FROM students WHERE id = " + id);
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("SELECT * FROM students WHERE id = ");
+            stringBuilder.append(id);
+            
+            PreparedStatement ps = connection.prepareStatement(stringBuilder.toString());
+            ResultSet rs = ps.executeQuery();
+            
+//            Statement stt = connection.createStatement();
+//            ResultSet rs = stt.executeQuery("SELECT * FROM students WHERE id = " + id);
             if (rs.next()) {
                 int studentId = id;
                 String rollNumber = rs.getString("rollNumber");
@@ -84,7 +122,7 @@ public class StudentModel {
                 student = new Student(studentId, rollNumber, name, address, phone);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            System.out.println("Không tìm được sinh viên có Id như trên. Vui lòng thử lại.");
         }
         return student;
     }
@@ -95,6 +133,7 @@ public class StudentModel {
         try {
             Connection connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/quanlysinhvien?useUnicode=true&characterEncoding=utf-8", "root", "");
+            
             Statement stt = connection.createStatement();
             ResultSet rs = stt.executeQuery("SELECT * FROM students WHERE name like '%" + name + "%'");
             while (rs.next()) {
@@ -138,12 +177,11 @@ public class StudentModel {
             ResultSet rs = stt.executeQuery("SELECT * FROM students");
             while (rs.next()) {
                 int id = rs.getInt("id");
-                String rollNumber = rs.getString("rollNumber");
+                String studentRollNumber = rollNumber;
                 String name = rs.getString("name");
                 String address = rs.getString("address");
                 String phone = rs.getString("phone");
-                Student studentUpdate = new Student(id, rollNumber, name, phone, address);
-                listStudent.add(studentUpdate);
+                Student studentUpdate = new Student(id, studentRollNumber, name, phone, address);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -155,29 +193,52 @@ public class StudentModel {
         StudentController st = new StudentController();
         StudentModel model = new StudentModel();
         
-        // Kiểm tra hàm getById()
-        Student student1 = model.getById(2);
-        if(null == student1){
-            System.out.println("Không tồn tại sinh viên.");
-        } else {
-            System.out.println(student1.toString());
-        }
+        System.out.println(model.getList());
         
-        // Kiểm tra hàm searchByName()
-        ArrayList<Student> list = model.searchByName("Hùng");
-        if (list == null || list.size() == 0) {
-            System.out.println("Không tồn tại sinh viên");
-            return;
-        } else {
-            System.out.printf("%18s %18s %18s %18s \n", "Mã sinh viên", "Tên sinh viên", "Số điện thoại", "Địa chỉ");
-            for (int i = 0; i < list.size(); i++) {
-                Student student2 = list.get(i);
-                System.out.printf("%18s %18s %18s %18s \n", student2.getRollNumber(), student2.getName(),
-                        student2.getPhone(), student2.getAddress());
-            }
-        }
+//        // Kiểm tra hàm getById()
+//        Student student1 = model.getById(2);
+//        if (null == student1) {
+//            System.out.println("Không tồn tại sinh viên.");
+//        } else {
+//            System.out.println(student1.toString());
+//        }
+//
+//        // Kiểm tra hàm searchByName()
+//        ArrayList<Student> list = model.searchByName("Hùng");
+//        if (list == null || list.size() == 0) {
+//            System.out.println("Không tồn tại sinh viên");
+//            return;
+//        } else {
+//            System.out.printf("%18s %18s %18s %18s \n", "Mã sinh viên", "Tên sinh viên", "Số điện thoại", "Địa chỉ");
+//            for (int i = 0; i < list.size(); i++) {
+//                Student student2 = list.get(i);
+//                System.out.printf("%18s %18s %18s %18s \n", student2.getRollNumber(), student2.getName(),
+//                        student2.getPhone(), student2.getAddress());
+//            }
+//        }
+//        
+//        // Try catch
+//        try {
+//            model.insert(new Student("A005", "Xuân Hùng", "12345", "Cầu Giấy"));
+//        } catch (SQLException ex) {
+//            Logger.getLogger(StudentModel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
+//        demoStringJava();
+        
     }
-
+    
+    // Sử dụng để thay thế cho việc nối chuỗi làm tăng tính performance cho app
+    public static void demoStringJava(){
+        long startTime = System.currentTimeMillis();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Tôi là ");
+        stringBuilder.append("Xuân Hùng.");
+        System.out.println(stringBuilder.toString());
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
+    }
     // 24/3/2018 : Tại sao null == student?
     // Tùng tìm hiểu searchbyname - fulltextsearch
+
 }
